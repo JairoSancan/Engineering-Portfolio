@@ -69,6 +69,13 @@
         <!-- Premium Header -->
         <header class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-8 sm:p-14 relative">
             <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-20 -mt-20"></div>
+
+            <!-- Widget de Fecha y Clima (Sudbury) -->
+            <div class="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 text-xs sm:text-sm font-medium text-blue-100 bg-slate-800/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 flex items-center gap-3 shadow-lg">
+                <span id="date-display"><i class="fas fa-spinner fa-spin"></i></span>
+                <span class="w-px h-4 bg-slate-500/50"></span>
+                <span id="temp-display"><i class="fas fa-spinner fa-spin"></i></span>
+            </div>
             
             <div class="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-8">
                 <!-- Foto de Perfil Actualizada -->
@@ -358,6 +365,25 @@
         revealElements.forEach(el => {
             revealOnScroll.observe(el);
         });
+
+      // Date & Weather Widget (Sudbury Coordinates)
+        const dateDisplay = document.getElementById('date-display');
+        const tempDisplay = document.getElementById('temp-display');
+        
+        const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        dateDisplay.innerHTML = `<i class="far fa-calendar-alt mr-1 text-blue-400"></i> ${new Date().toLocaleDateString('en-US', dateOptions)}`;
+
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=46.49&longitude=-81.01&current_weather=true')
+            .then(response => response.json())
+            .then(data => {
+                const temp = Math.round(data.current_weather.temperature);
+                tempDisplay.innerHTML = `<i class="fas fa-thermometer-half mr-1 text-blue-400"></i> ${temp}°C`;
+            })
+            .catch(err => {
+                tempDisplay.innerHTML = `<i class="fas fa-thermometer-half mr-1 text-blue-400"></i> --°C`;
+            });
+
+        
     </script>
 </body>
 </html>
